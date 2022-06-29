@@ -1,0 +1,115 @@
+<section class="h-100 gradient-custom pt-5 pb-5">
+  <div class="container  pt-5">
+    <div class="pt-5 pb-5">
+
+    
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card" style="border-radius: 10px;">
+          <div class="card-header px-4 py-5 pt-5">
+            <h5 class="text-muted mb-0">Thanks for your Order, <span style="color:#ffa020;">{{orderedDetails.deliveryDetails.firstName}}</span><span style="color: #a8729a;"></span>!</h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="lead fw-normal mb-0" style="color: #ffa020;">Receipt</p>
+              <p class="small text-muted mb-0">Receipt Voucher : {{orderedDetails._id}}</p>
+            </div>
+
+            {{#each orderProducts}}
+            <div class="card shadow-0 border mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-2">
+                    <img src="/uploads/{{this.product.image.[0].image1}}"
+                      class="img-fluid" alt="Phone">
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0">{{this.product.productName}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">{{this.product.color}}</p>
+                  </div>
+                  
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">x {{this.quantity}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small">₹{{this.product.price}}</p>
+                  </div>
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <p class="text-muted mb-0 small"> 
+                      Status:<span style="color:orangered">{{this.status}}</span> </p>
+                  </div>
+                  {{!-- <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <a href="/viewOrderSingle/{{this.item}}" class="btn primary-btn">Details</a>
+                  </div> --}}
+                  <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                    <form action="/viewOrderSingle" method="post">
+                    <input type="text"   name="orderId" value="{{../orderedDetails._id}}"hidden>
+                    <input type="text" name="proId" value="{{this.item}}" hidden>
+                   <button type="submit" class="btn primary-btn" >VIEW</button> 
+                   </form>
+                  </div>
+
+                </div>
+                
+                <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
+                <div class="row d-flex align-items-center">
+                  
+                </div>
+              </div>
+            </div>
+
+            {{/each}}
+            
+
+            <div class="d-flex justify-content-between pt-2">
+              <p class="fw-bold mb-0"><span style="color:#ffa020;">Order Details</span></p>
+              
+            </div>
+
+            {{!-- <div class="d-flex justify-content-between pt-2">
+              <p class="text-muted mb-0">Invoice Number : 788152</p>
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p>
+            </div> --}}
+
+            <div class="d-flex justify-content-between">
+                            <p class="text-muted mb-0"><span class="fw-bold me-4">Subtotal</span> ₹{{orderedDetails.subtotal}}</p>
+
+              {{!-- <p class="text-muted mb-0"><span class="fw-bold me-4">Invoice Date :</span> {{orderDetails.date}}</p> --}}
+              {{!-- <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p> --}}
+            </div>
+
+            <div class="d-flex justify-content-between ">
+              {{!-- <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p> --}}
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Coupon Discount</span> {{orderedDetails.couponDiscount}}</p>
+            </div>
+            <div class="d-flex justify-content-between ">
+              {{!-- <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p> --}}
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Total After Coupon</span>₹{{orderedDetails.totalAmountWithoutShipping}}</p>
+            </div>
+            <div class="d-flex justify-content-between ">
+              {{!-- <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p> --}}
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Shipping Charge</span>₹40</p>
+            </div>
+            <div class="d-flex justify-content-between ">
+              {{!-- <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p> --}}
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Amount Paid</span>₹{{orderedDetails.totalAmountPaid}}</p>
+            </div>
+            <div class="d-flex justify-content-between ">
+              {{!-- <p class="text-muted mb-0">Recepits Voucher : 18KU-62IIK</p> --}}
+              <p class="text-muted mb-0"><span class="fw-bold me-4">Refund</span>₹{{orderedDetails.amountToBeRefunded}}</p>
+            </div>
+
+          </div>
+          <div class="card-footer border-0 px-4 py-5 "
+            style="background-color: #ffcd87; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Grand Total:
+              <span class="h2 mb-0 ms-2">₹{{orderedDetails.totalAmountToBePaid}}</span></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>

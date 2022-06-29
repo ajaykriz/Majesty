@@ -1,0 +1,117 @@
+               <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                <!-- Page Heading -->
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Orders Table </h6>
+                    </div>
+                    <div class="ml-auto mr-3 mt-2">
+                        <a href="/users/add-coupon"><button class="btn btn-primary">Add Coupon</button></a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    {{!-- <th scope="col">No</th> --}}
+                <th scope="col">Coupon Code</th>
+                <th scope="col">Limit</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Percentage</th>
+                <th scope="col">Options</th>
+                <th scope="col">Options</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each coupons}}
+                                <tr>
+
+                                    <td scope="row">{{this.coupon}}</td>
+                                    <td scope="row">{{this.limit}}</td>
+                                    <td scope="row">{{this.starting}}</td>
+                                    <td scope="row">{{this.expiry}}</td>
+                                    <td scope="row">{{this.offer}}</td>
+                                    <td>
+                                                <a href="/users/editCoupon/{{this._id}}" class="btn btn-primary" >Edit </a>
+                                            </td>
+                                            <td>
+                               <a href="/users/deleteCoupon/{{this._id}}" class="btn btn-danger delete-button" >Delete</a>
+
+                                            </td>
+
+                                            
+                                    
+                                    {{!-- <td><a href="#" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" href="#" name="{{this.Category}}"
+                        onclick="deleteCoupon(event)"><i class="fas fa-trash-alt"></i></a>
+                </td> --}}
+                                    
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+ <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib2/chart/chart.min.js"></script>
+    <script src="lib2/easing/easing.min.js"></script>
+    <script src="lib2/waypoints/waypoints.min.js"></script>
+    <script src="lib2/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib2/tempusdominus/js/moment.min.js"></script>
+    <script src="lib2/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib2/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js2/main.js"></script>
+
+
+
+            <script>
+                $(document).ready(function () {
+                    let today = new Date()
+                    var dd = today.getDate();
+                    var mm = today.getMonth() + 1;
+
+                    var yyyy = today.getFullYear();
+                    if (dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if (mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    today = yyyy + '-' + mm + '-' + dd;
+
+                    $('#str').attr('min', today)
+                    $('#str').change(function () {
+                        let date = document.getElementById('str').value
+                        $('#exp').attr('min', date)
+                    })
+                })
+            </script>
+            <script>
+                function isNumber(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                        return false;
+                    }
+                    return true;
+                }
+            </script>

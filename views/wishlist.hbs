@@ -1,0 +1,99 @@
+<section  style="padding-top: 80px;" class="cart_area section_padding">
+
+  <div class="container">
+    <div class="cart_inner">
+      <div class="table-responsive">
+        <table class="table ">
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col">Name</th>
+              <th scope="col">Color</th>
+              <th scope="col">Price</th>
+              <th scope="col"></th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {{#each products}}
+            <tr>
+              <td>
+                <div class="media">
+                  <div class="d-flex">
+                    <img style="height: 130px;width: 120px;" src="/uploads/{{this.product.image.[0].image1}}" alt="" />
+                  </div>
+              <td>
+                <h5>{{this.product.title}}</h5>
+              </td>
+      </div>
+      </td>
+      <td>
+        <h5>{{this.product.colour}}</h5>
+      </td>
+      <td>
+        <h5>{{this.product.price}}</h5>
+      </td>
+       <td>
+         <button class="btn btn-primary"   onclick="addToCart('{{this._id}}','{{this.product._id}}','{{../user._id}}')">ADD TO CART</button>
+     
+        <button class="btn btn-danger" onclick="deleteProd('{{this._id}}','{{this.product._id}}')">REMOVE</button>
+      </td>
+      </tr>
+      {{/each}}
+      </tbody>
+      </table>
+    </div>
+  </div>
+  </div>
+</section>
+
+<script>
+    function addToCart(wishId, proId, userId) {
+    $.ajax({
+      url: '/wishlist-to-cart',
+      data: {
+        wishlist: wishId,
+        product: proId,
+        user: userId
+      },
+      method: 'post',
+      success: (response) => {
+        if (response) {
+          alert('Product added to Cart')
+          location.reload()
+        }
+      }
+    })
+  }
+    function deleteProd(wishId, proId) {
+    $.ajax({
+      url: '/delete-wishlist-product',
+      data: {
+        wishlist: wishId,
+        product: proId,
+        
+      },
+      method: 'post',
+      success: (response) => {
+        if (response) {
+          alert('Product Removed from your Wish list')
+          location.reload()
+        }
+      }
+    })
+  }
+</script>
+
+<style>
+  .section_padding {
+    padding: 0%;
+  }
+
+  .cart_inner .table thead tr th {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(92, 83, 83);
+  }
+  .btn_1 {
+    background-color: #735671;}
+</style>

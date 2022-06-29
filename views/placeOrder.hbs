@@ -1,0 +1,327 @@
+<section>
+	<div class="container">
+		
+		<form method="post" class="colorlib-form" id="checkout-form" autocomplete="on">
+			<h2>Delivery Address</h2>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="fname">First Name</label> --}}
+						<input type="text" id="fname" name="fname" class="form-control" placeholder="Your firstname">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="lname">Last Name</label> --}}
+						<input type="text" id="lname" name="lname" class="form-control" placeholder="Your lastname">
+					</div>
+				</div>
+
+
+
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="fname">House Name</label> --}}
+						<input type="text" id="house" name="address" class="form-control"
+							placeholder="Enter Your Address">
+					</div>
+
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="companyname">Local Place</label> --}}
+						<input type="text" id="localplace" name="localplace" class="form-control"
+							placeholder="localplace">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="companyname">Town/City</label> --}}
+						<input type="text" id="towncity" name="towncity" class="form-control"
+							placeholder="Town or City">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="companyname">District</label> --}}
+						<input type="text" id="district" name="district" class="form-control" placeholder="district">
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="stateprovince">State</label> --}}
+						<input type="text" id="state" name="state" class="form-control" placeholder="State ">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="lname">PIN Code</label> --}}
+						<input type="number" id="pin" name="pin" class="form-control" placeholder="PIN Code">
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="email">E-mail Address</label> --}}
+						<input type="email" id="email" name="email" class="form-control" placeholder="Email">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						{{!-- <label for="Phone">Mobile Number</label> --}}
+						<input type="number" id="mobile" name="mobile" class="form-control" placeholder="Mobile">
+					</div>
+				</div>
+
+
+			</div>
+			<hr>
+			<div class="row">
+
+			</div>
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="cart-detail border">
+						<h4>Cart Total</h4>
+						<hr>
+						<ul>
+							<li>
+								<strong><span>Subtotal</span> <span>{{total}}</span></strong>
+								<ul>
+									<% products.forEach((x)=> { %>
+										<li><span>
+												<%=x.quantity%> x <%=x.product.title%>
+											</span> <span>
+												<%=x.product.price*x.quantity%>
+											</span></li>
+										<!-- <li><span>1 x Product Name</span> <span>RS.0.00</span></li> -->
+										<% }) %>
+								</ul>
+							</li>
+							<li><span>Shipping</span> <span>0.00</span></li>
+							<li><span style="display: none;" id="discountLabel">Coupon
+									discount</span><span id="discountspan" style="display: none;">0</span></li>
+							<li><strong><span>Order Total</span> <span id="totalOriginal">
+										<%=total%>
+									</span></strong></li>
+							<input type="text" name="discount" style="display: none;" id="discount" hidden>
+						</ul>
+						<!-- Coupon starting  -->
+						<div class="your-order-bottom">
+							<div class="discount-code">
+								<!-- Button trigger modal -->
+								  <button type="button" class="btn btn-link float-end" data-toggle="modal"
+                data-target="#exampleModalCenter">
+                Get New Coupons
+              </button>
+								<p>Enter your coupon code if you have one.</p>
+
+								<input type="text" class="form-control" name="coupon" id="couponInput"
+									autocapitalize="on" />
+								<input type="text" id="couponTotal" name="total" value="<%=total%>" hidden>
+								<input type="text" id="code" name="Coupon_code" hidden>
+								<a id="couponBtn" onclick="couponApply()"
+									class="btn bg-success text-white text-center  mt-2"
+									style="width: 100%;text-decoration: none;">Apply
+									Coupon</a>
+								<!-- Error handling of coupons  -->
+								<div class="mt-2">
+									<div class="alert alert-danger" style="display: none;" id="couponUsed" role="alert">
+										This Coupon was redeemed
+									</div>
+									<div class="alert alert-danger" style="display: none;" id="couponInvalid"
+										role="alert">
+										This Coupon is
+										invalid
+									</div>
+									<div class="alert alert-success" style="display: none;" id="couponSuccess"
+										role="alert">
+										Coupon Applied
+										Successfully
+									</div>
+									<div class="alert alert-warning" style="display: none;" id="couponExpired"
+										role="alert">
+										Sorry!!! Your
+										Coupon has been Expired
+									</div>
+
+									<div class="alert alert-warning" style="display: none;" id="couponMaxLimit"
+										role="alert">
+										Sorry!!! Your
+										Coupon Has Reached Maximum Limit
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+
+				<!-- Modal -->
+
+				{{!-- modal management --}}
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+              aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLongTitle">All Available Coupons</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+
+                  </div>
+                  {{#each coupon }}
+                  <div class="modal-body">
+                    <div class="row ">
+                      <div class="col-12 ">
+                        <input type="text" name="" id="{{this._id}}" value="{{this.coupon}}" hidden>
+
+                        <div class="card">
+                          <div class="card-body">
+                            <h1 class="card-title">{{this.coupon}}</h1>
+                            <p class="card-text">You Can get <span style="color:red"> {{this.offer}}%</span> Discount
+                              for this Coupon</p>
+                            <p>Expired on : {{this.expiry}}</p>
+                            <button type="button" onclick="copyFunction('{{this._id}}')"
+                              class="btn btn-primary copy-button">Copy</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {{/each}}
+                  <div class="modal-footer"></div>
+
+                </div>
+              </div>
+            </div>
+
+
+				<!-- Modal end -->
+
+				<div class="col-lg-6">
+					<div class="cart-detail border">
+						<h4>Payment Method</h4>
+						<hr>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="radio">
+									<input type="radio" name="paymentMethod" value="cod">
+									<label>COD</label>
+
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<div class="radio">
+									<input type="radio" name="paymentMethod" value="razorpay">
+									<label> Razorpay</label>
+								</div>
+							</div>
+						</div>
+						{{!-- <div class="form-group">
+							<div class="col-md-12">
+								<div class="radio">
+									<input type="radio" name="paymenMethod" value="paypal">
+									<label>Paypal</label>
+								</div>
+							</div> --}}
+							{{!--
+						</div> --}}
+						<div class="form-group">
+							<div class="col-md-12">
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<input type="text" name="userId" value="{{userId}}" hidden>
+			<hr>
+
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<button class="btn btn-success" type="submit">CHECHOUT</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+</section>
+
+<script>
+	$("#checkout-form").submit((e) => {
+		e.preventDefault()
+		$.ajax({
+			url: '/placeOrder',
+			method: 'post',
+			data: $('#checkout-form').serialize(),
+			success: (response) => {
+				if (response.codSuccess) {
+					location.href = '/orderReceipt'
+				} else {
+					razorpayPayment(response)
+				}
+			}
+		})
+	})
+	function razorpayPayment(order) {
+		var options = {
+			"key": "rzp_test_0kunsgcIRnSpnc", // Enter the Key ID generated from the Dashboard
+			"amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+			"currency": "INR",
+			"name": "Majestic",
+			"description": "Test Transaction",
+			"image": "https://example.com/your_logo",
+			"order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+			"handler": function (response) {
+				// alert(response.razorpay_payment_id);
+				// alert(response.razorpay_order_id);
+				// alert(response.razorpay_signature)
+				alert(order)
+				verifyPayment(response, order)
+
+			},
+			"prefill": {
+				"name": "Gaurav Kumar",
+				"email": "gaurav.kumar@example.com",
+				"contact": "9999999999"
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};
+		var rzp1 = new Razorpay(options);
+		rzp1.open();
+	}
+	function verifyPayment(payment, order) {
+		$.ajax({
+			url: '/verifyPayment',
+			data: {
+				payment,
+				order
+			},
+			method: 'post',
+			success: (response) => {
+				if (response.status) {
+					location.href = '/orderReceipt'
+
+				} else {
+					alert('payment failed')
+				}
+			}
+		})
+	}
+</script>
