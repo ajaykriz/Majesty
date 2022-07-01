@@ -24,9 +24,9 @@ router.get("/", async function (req, res, next) {
     ])
   }
   const wshirt='';const wsaree='';const mtshirt='';const mshirt='';const mjacket='';
-  [ wshirt,wsaree,mtshirts,mshirt,mjacket]=await Promise.all([productHelpers.getWomenShirt(),productHelpers.getWomenSaree(),productHelpers.getMenTshirt(),productHelpers.getMenShirt(),productHelpers.getMenJacket()])
+  [ wshirt,wsaree,mtshirt,mshirt,mjacket]=await Promise.all([productHelpers.getWomenShirt(),productHelpers.getWomenSaree(),productHelpers.getMenTshirt(),productHelpers.getMenShirt(),productHelpers.getMenJacket()])
   productHelpers.getWomenTshirt().then((products) => {
-    res.render("index", { user, products, cartCount, wishlistCount,brand,wshirt,wsaree,mtshirts,mshirt,mjacket });
+    res.render("index", { user, products, cartCount, wishlistCount,brand,wshirt,wsaree,mtshirt,mshirt,mjacket });
   });
 });   
 router.get("/login", function (req, res, next) {
