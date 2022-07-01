@@ -97,7 +97,7 @@ router.post(
       console.log(prodId);
 
       productHelpers.addImagebrand(prodId, img).then(() => {
-        res.redirect("/users/allproducts");
+        res.redirect("/users/brand");
       });
     });
   }

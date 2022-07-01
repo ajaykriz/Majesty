@@ -139,7 +139,7 @@
 
             <header class="border-bottom mb-4 pb-3">
                 <div class="form-inline float-end">
-                    <form class="d-flex justify-content-between" action="/search" method="post"> 
+                    <form class="d-flex justify-content-between" action="/getSearchProducts" method="post"> 
                     <input autocomplete="off" id="search-box" name="key" type="text" class="form-control" placeholder="Search"
                     style="min-width: 125px;" />
                    <button   style="border: none ;outline: none; background-color:white;" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -149,50 +149,39 @@
                 </div>
             </header>
 
-     <div class="container pt-5">
+     <div class="container pt-5" >
 				
-				<div class="row "  id="products">
+				<div class="row pb-2"  id="products">
                     {{#each filterResult}}
 					<!-- single product -->
-					<div class="col-6 col-lg-4 col-md-6 pb-5">
+					<div class="col-6 col-lg-4 col-md-6 pb-5 border">
 						<div class="single-product ">
 							<a href="/viewProduct/{{this._id}}"><img class="img-fluid border border-warning rounded" src="/uploads/{{this.image.[0].image1}}" alt=""></a>
 							<div class="product-details ">
-								<h6><a>{{this.productName}}</a></h6>
+								<h6><a>{{this.title}}</a></h6>
 								<div class="price">
-									<h6>Rs {{this.price}}</h6>
-									<h6 style="color:darkred" class="l-through">Rs {{this.MRP}}</h6>
-                                    <h6 style="color:darkred" >{{this.discount}} % off</h6>
+									<h6>Rs.{{this.price}}</h6>
+                                    
 								</div>
                                 
 
                                 {{#if ../user}}
-							<div class="prd-bottom ">
-
-								<span class="social-info" onclick="addToWishlist('{{this._id}}')">
-									<span class="lnr lnr-heart"></span>
-									<p class="hover-text"> Wishlist</p>
-								</span>
-
-								<span class="social-info" onclick="addToCart('{{this._id}}')">
-									<span class="ti-bag"></span>
-									<p class="hover-text">add Cart</p>
-								</span>
-							</div>
+							<button
+                  class="btn btn-danger text-uppercase mr-2 px-4"
+                  onclick="addtoCart('{{this._id}}')"
+                >Add to cart</button>
+                <a onclick="addToWishlist('{{this._id}}')" class="btn"><i
+                    class="fa fa-heart "
+                  ></i></a>
 							
                           {{else}}
-							<div class="prd-bottom ">
-
-								<a href="/login"><span class="social-info">
-									<span class="lnr lnr-heart"></span>
-									<p class="hover-text"> Wishlist</p>
-								</span></a>
-
-								<a href="/login"><span class="social-info" >
-									<span class="ti-bag"></span>
-									<p class="hover-text">add Cart</p>
-								</span></a>
-							</div>
+							 <button
+                  class="btn btn-danger text-uppercase mr-2 px-4"
+                 
+                >Add to cart</button>
+                <a  class="btn"><i
+                    class="fa fa-heart "
+                  ></i></a>
 							{{/if}}
 
                                 
@@ -229,38 +218,37 @@
 </div>
 </div>
 <script>
-function addToWishlist(proId) {
-		$.ajax({
-			url: "/AddToWishlist/" + proId,
-			methode: "get",
-			success: (Response) => {
-				if (Response.modifiedCount == 1) {
-					let count = $('#wishCount').html()
-					count = parseInt(count) + 1
-					$("#wishCount").html(parseInt(count))
-				}
-			}
-		})
+function addtoCart(proId){
+    $.ajax({
+      url:'/add-to-cart/'+proId,
+      method:'get',
+      success:(response)=>{
+        if(response.status){
+          let count=$('#cartcount').html()
+          count=parseInt(count)+1
+          $('#cartcount').html(count)
 
-	}
-    function addToCart(proId) {
-		$.ajax({
-			url: "/AddToCart/" + proId,
-			methode: "get",
-			success: (Response) => {
+        }
+        
+      }
+    })
+  };
+  function addToWishlist(proId){
+    $.ajax({
+      url:'/add-to-wishlist/'+proId,
+      method:'get',
+      success:(response)=>{
+        if(response.status){
+          let count=$('#wishlistcount').html()
+          count=parseInt(count)+1
+          $('#wishlistcount').html(count)
 
-				if (Response.modifiedCount == 1) {
-					let count = $('#cartCount').html()
-					count = parseInt(count) + 1
-					$("#cartCount").html(parseInt(count))
-
-				}
-			}
-		})
-	}
-
-</script>
-
+        }
+        
+      }
+    })
+  };
+</script>   
    <script>
                 $('input[name=brand]').change(function () {
 

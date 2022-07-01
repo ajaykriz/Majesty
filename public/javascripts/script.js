@@ -166,7 +166,7 @@ function removeItem(cartId,proId){
   }
         var subcategory = {
             MEN: ["T-shirt", "Shirt", "Jacket"],
-            WOMEN: ["Saree","T-shirt", "Shirt"]
+            WOMEN: ["Saree","T-shirts", "Shirts"]
 
 
         }

@@ -580,6 +580,7 @@ module.exports = {
             { title: { $regex: new RegExp("^" + key + ".*", "i") } },
             { brand: { $regex: new RegExp("^" + key + ".*", "i") } },
             { category: { $regex: new RegExp("^" + key + ".*", "i") } },
+            { subcategory: { $regex: new RegExp("^" + key + ".*", "i") } }
           ],
         })
         .toArray();

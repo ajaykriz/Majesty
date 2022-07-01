@@ -148,6 +148,7 @@ module.exports = {
             $project: {
               item: "$products.item",
               quantity: "$products.quantity",
+              subtotal:'$products.subtotal'
             },
           },
           {
@@ -171,6 +172,7 @@ module.exports = {
             $project: {
               item: 1,
               quantity: 1,
+              subtotal:1,
               product: {
                 $arrayElemAt: ["$product", 0],
               },

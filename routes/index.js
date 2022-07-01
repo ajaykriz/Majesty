@@ -5,6 +5,7 @@ const productHelpers = require("../helpers/product-helpers");
 const cartHelpers = require("../helpers/cart-helpers");
 /* GET home page. */
 var filterResult
+var custom
 const verifyLogin = (req, res, next) => {
   if (req.session.loggedIn) {
     next();
@@ -22,10 +23,12 @@ router.get("/", async function (req, res, next) {
       cartHelpers.getCartCount(req.session.user._id), cartHelpers.getWishlistCount(req.session.user._id)
     ])
   }
-  productHelpers.getAllProducts().then((products) => {
-    res.render("index", { user, products, cartCount, wishlistCount,brand });
+  // const wshirt='';const wsaree='';const mtshirt='';const mshirt='';const mjacket='';
+  [ wshirt,wsaree,mtshirts,mshirt,mjacket]=await Promise.all([productHelpers.getWomenShirt(),productHelpers.getWomenSaree(),productHelpers.getMenTshirt(),productHelpers.getMenShirt(),productHelpers.getMenJacket()])
+  productHelpers.getWomenTshirt().then((products) => {
+    res.render("index", { user, products, cartCount, wishlistCount,brand,wshirt,wsaree,mtshirts,mshirt,mjacket });
   });
-});
+});   
 router.get("/login", function (req, res, next) {
   if (req.session.loggedIn) {
     res.redirect("/");
@@ -38,7 +41,7 @@ router.post("/login", (req, res) => {
     .doLogin(req.body)
     .then((response) => {
       if (response.status) {
-        if (response.user.block) {
+        if (response.user.block) {    
           req.session.loggedIn = false;
           res.redirect("/login");
         } else {
@@ -163,8 +166,14 @@ router.get("/cart", verifyLogin, async (req, res) => {
   let count = products.length;
   if (products.length > 0){
     total = await cartHelpers.getTotalAmount(req.session.user._id);
-
-  res.render("cart2", { user, products, total, count });
+    let cartCount = '';
+    let wishlistCount = '';
+    if (user) {
+      [cartCount, wishlistCount] = await Promise.all([
+        cartHelpers.getCartCount(req.session.user._id), cartHelpers.getWishlistCount(req.session.user._id)
+      ])
+    }
+  res.render("cart2", { user, products, total, count ,cartCount,wishlistCount });
   }
   else{
     res.redirect('/emptyCart')
@@ -268,7 +277,15 @@ router.get("/wishlist", verifyLogin, async (req, res) => {
 });
 router.get("/viewProduct/:id", async (req, res) => {
   let product = await userHelpers.getProduct(req.params.id);
-  res.render("viewProduct", { product });
+  const user=req.session.user
+  let cartCount = ''
+  let wishlistCount = ''
+  if (user) {
+    [cartCount, wishlistCount] = await Promise.all([
+      cartHelpers.getCartCount(req.session.user._id), cartHelpers.getWishlistCount(req.session.user._id)
+    ])
+  }
+  res.render("viewProduct", { product ,user,cartCount,wishlistCount});
 });
 router.post("/wishlist-to-cart", (req, res) => {
   cartHelpers.addtoCart(req.body.product, req.body.user).then((response) => {
@@ -418,8 +435,10 @@ router.get('/emptyCart',(req,res)=>{
 })
 router.get('/getProducts/:id',async(req,res)=>{
   let key=req.params.id
+  console.log(key)
   filterResult = await userHelpers.getSearchProducts(key)
   res.redirect('/filterpage')
 
 })
+
 module.exports = router;

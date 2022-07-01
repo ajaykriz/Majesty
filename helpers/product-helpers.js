@@ -23,6 +23,61 @@ module.exports = {
       resolve(products);
     });
   },
+  getWomenTshirt:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"WOMEN",subcategory:"T-shirts"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },getWomenShirt:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"WOMEN",subcategory:"Shirts"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },getWomenSaree:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"WOMEN",subcategory:"Saree"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },getMenTshirt:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"MEN",subcategory:"T-shirt"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },getMenShirt:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"MEN",subcategory:"Shirt"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },getMenJacket:()=>{
+    return new Promise(async (resolve, reject) => {
+      let products = await db
+        .get()
+        .collection(collection.PRODUCT_COLLECTION)
+        .find({category:"MEN",subcategory:"Jacket"}).limit(4)
+        .toArray();
+      resolve(products);
+    });
+  },
   addProduct: (productData) => {
     productData.stock = parseInt(productData.stock);
     productData.price = parseInt(productData.price);
@@ -481,7 +536,7 @@ module.exports = {
   searchFilter: (brandFilter, cateFilter, price) => {
     return new Promise(async (resolve, reject) => {
       let result;
-      console.log(brandFilter)
+      console.log(brandFilter);
       if (brandFilter.length > 0 && cateFilter.length > 0) {
         result = await db
           .get()
@@ -535,15 +590,16 @@ module.exports = {
           ])
           .toArray();
       }
-      console.log(result)
+      console.log(result);
       resolve(result);
     });
-  },salesReport:(data)=>{
-    let response={}
-       let {startDate,endDate} = data
+  },
+  salesReport: (data) => {
+    let response = {};
+    let { startDate, endDate } = data;
 
-  let d1, d2, text;
-  if (!startDate || !endDate) {
+    let d1, d2, text;
+    if (!startDate || !endDate) {
       d1 = new Date();
       d1.setDate(d1.getDate() - 7);
       d2 = new Date();
@@ -553,107 +609,111 @@ module.exports = {
       d2 = new Date(endDate);
       text = `Between ${startDate} and ${endDate}`;
     }
- 
 
-// Date wise sales report
-const date = new Date(Date.now());
-const month = date.toLocaleString("default", { month: "long" });
+    // Date wise sales report
+    const date = new Date(Date.now());
+    const month = date.toLocaleString("default", { month: "long" });
 
-       return new Promise(async(resolve,reject)=>{
+    return new Promise(async (resolve, reject) => {
+      let salesReport = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: {
+              date: {
+                $lt: d2,
+                $gte: d1,
+              },
+            },
+          },
+          {
+            $match: { status: "placed" },
+          },
+          {
+            $group: {
+              _id: { $dayOfMonth: "$date" },
+              total: { $sum: "$totalAmountToBePaid" },
+            },
+          },
+        ])
+        .toArray();
 
-let salesReport=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+      let brandReport = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: { status: "placed" },
+          },
+          {
+            $unwind: "$products",
+          },
+          {
+            $project: {
+              brand: "$products.brand",
+              quantity: "$products.quantity",
+            },
+          },
+          {
+            $group: {
+              _id: "$brand",
+              totalAmount: { $sum: "$quantity" },
+            },
+          },
+        ])
+        .toArray();
 
-{
-  $match: {
-    date: {
-      $lt: d2,
-      $gte: d1,
-    },
+      let orderCount = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .find({ date: { $gt: d1, $lt: d2 } })
+        .count();
+
+      let totalAmounts = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: { status: "placed" },
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$totalAmountPaid" },
+            },
+          },
+        ])
+        .toArray();
+
+      let totalAmountRefund = await db
+        .get()
+        .collection(collection.ORDER_COLLECTION)
+        .aggregate([
+          {
+            $match: { status: "placed" },
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$amountToBeRefunded" },
+            },
+          },
+        ])
+        .toArray();
+
+      console.log(
+        "5555555555555555555555555555555555555555555555555555555555555555555555"
+      );
+      console.log(totalAmountRefund);
+
+      response.salesReport = salesReport;
+      response.brandReport = brandReport;
+      response.orderCount = orderCount;
+      response.totalAmountPaid = totalAmounts[0].totalAmount;
+      response.totalAmountRefund = totalAmountRefund[0].totalAmount;
+
+      resolve(response);
+    });
   },
-},
-{
- $match:{status:'placed'}
-},
-{
-  $group: {
-    _id: { $dayOfMonth: "$date" },
-    total: { $sum: "$totalAmountToBePaid" },
-  },
-},
-]).toArray();
-
-
- let brandReport = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-   {
-     $match:{status:'placed'}
-    },
-   {
-      $unwind: "$products",
-    },{
-      $project:{
-          brand: "$products.brand",
-          quantity:"$products.quantity"
-      }
-    },{
-      $group:{
-          _id:'$brand',
-          totalAmount: { $sum: "$quantity" },
-    
-      }
-    }
-    
-    ]).toArray()
-
-
-
-let orderCount = await db.get().collection(collection.ORDER_COLLECTION).find({date:{$gt : d1, $lt : d2}}).count()
-
-
-let totalAmounts=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
- {
-   $match:{status:'placed'}
-  },
- {
-   $group:
-   {
-     _id: null,
-     totalAmount: { $sum:"$totalAmountPaid"}
-
-     
-   }
- }
-]).toArray()
-
-let totalAmountRefund=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
- {
-   $match:{status:'placed'}
-  },
- {
-   $group:
-   {
-     _id: null,
-     totalAmount: { $sum:'$amountToBeRefunded'
-       }
-
-     
-   }
- }
-]).toArray()
-
-console.log('5555555555555555555555555555555555555555555555555555555555555555555555');
-console.log(totalAmountRefund);
-
-
-
-
-response.salesReport=salesReport
-response.brandReport=brandReport
-response.orderCount=orderCount
-response.totalAmountPaid=totalAmounts[0].totalAmount
-response.totalAmountRefund=totalAmountRefund[0].totalAmount
-
-resolve(response)      
-       })
-        
-     }
-    }
+};
