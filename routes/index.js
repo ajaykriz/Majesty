@@ -23,8 +23,9 @@ router.get("/", async function (req, res, next) {
       cartHelpers.getCartCount(req.session.user._id), cartHelpers.getWishlistCount(req.session.user._id)
     ])
   }
-  const wshirt='';const wsaree='';const mtshirt='';const mshirt='';const mjacket='';
+  let wshirt='';let wsaree='';let mtshirt='';let mshirt='';let mjacket='';
   [ wshirt,wsaree,mtshirt,mshirt,mjacket]=await Promise.all([productHelpers.getWomenShirt(),productHelpers.getWomenSaree(),productHelpers.getMenTshirt(),productHelpers.getMenShirt(),productHelpers.getMenJacket()])
+  console.log( mtshirt)
   productHelpers.getWomenTshirt().then((products) => {
     res.render("index", { user, products, cartCount, wishlistCount,brand,wshirt,wsaree,mtshirt,mshirt,mjacket });
   });
